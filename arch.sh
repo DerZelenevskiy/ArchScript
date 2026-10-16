@@ -40,7 +40,7 @@ logDir="$(realpath "$logDir")"
 #Определение директории для сохранения архива
 backupDir="$2"
 if [ ! -d "$backupDir" ]; then
-  if [ -z "$backupDir" ]; then backupDir=$(realpath ../backup); if [ ! -d "$backupDir" ]; then mkdir "$backupDir"; fi
+  if [ -z "$backupDir" ]; then backupDir=$(readlink -f "$logDir/../backup"); if [ ! -d "$backupDir" ]; then mkdir "$backupDir"; fi
   else echo "Invalid backup-dir $backupDir" >&2; echo "Use -h for more info"; exit 1; fi
 fi
 backupDir="$(realpath "$backupDir")"
