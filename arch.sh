@@ -32,10 +32,11 @@ shift $((OPTIND - 1))
 #Определение рабочей директории
 logDir="$1"
 if [ ! -d "$logDir" ]; then
-  if [ -z "$logDir" ]; then logDir="$(pwd)"
+  if [ -z "$logDir" ]; then logDir="$(dirname -- "$0")"
   else echo "Invalid working-dir $logDir" >&2; echo "Use -h for more info"; exit 1; fi
 fi
 logDir="$(realpath "$logDir")"
+cd "$logDir"
 
 #Определение директории для сохранения архива
 backupDir="$2"
@@ -68,7 +69,7 @@ fileList="$(mktemp)"
 totalSize=0
 fileCount=0
 while read -r time size path; do
-  echo "$path" >> "$fileList"
+  if [[ ! "$(basename "$0")" = "$path" ]]; then echo "$path" >> "$fileList"; fi
   (( totalSize += size ))
   (( ++fileCount ))
   if (( totalSize >= toBeFreed )); then break; fi
