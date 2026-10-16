@@ -72,7 +72,7 @@ echo "=========================="
 test2
 test4() {
 echo "=== Тест 4: lzma on, заполнение выше порога, порог в формате долей, директории не передаются ==="
-echo "Подготовка: 6 файлов по 150M (900M, 90%), порог 65.5%, lzma on"
+echo "Подготовка: 6 файлов по 150M (900M, 87.8%), порог 65.5%, lzma on"
 echo "Ожидание:   архив создан в формате .tar.xz"
 echo
 
@@ -106,9 +106,9 @@ backup_count=$(ls /tmp/lab-test/backup/*.tar.xz 2>/dev/null | wc -l)
 
 
 if [ "$code" -eq 0 ] && [ "$log_count" -eq 4 ] && [ "$backup_count" -eq 1 ]; then
-echo "Результат: PASSED"
+echo "PASSED"
 else
-echo "Результат: FAILED"
+echo "FAILED"
 fi
 '
 }
