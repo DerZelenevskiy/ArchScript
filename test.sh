@@ -20,7 +20,7 @@ for i in {1..4}; do
 fallocate -l 160M "/tmp/lab-test/log/file$i"
 done
 
-bash "$HOME/lab/arch.sh" -c 90 /tmp/lab-test/log /tmp/lab-test/backup
+bash "$HOME/ArchScript/arch.sh" -c 90 /tmp/lab-test/log /tmp/lab-test/backup
 
 code=$?
 
@@ -58,7 +58,7 @@ mkdir -p /tmp/lab-test/backup
 
 mount -t tmpfs -o size=1G disk /tmp/lab-test/log
 
-bash "$HOME/lab/arch.sh" -c 120
+bash "$HOME/ArchScript/arch.sh" -c 120
 code=$?
 echo "exit code: $code"
 if [ "$code" -eq 1 ]; then
@@ -89,7 +89,7 @@ fallocate -l 150M "/tmp/lab-test/log/file$i"
 done
 cd /tmp/lab-test/log
 export LAB1_MAX_COMPRESSION=1
-bash "$HOME/lab/arch.sh" -c 0.655
+bash "$HOME/ArchScript/arch.sh" -c 0.655
 code=$?
 cd - >/dev/null
 echo "exit code: $code"
