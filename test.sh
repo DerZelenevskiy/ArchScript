@@ -214,3 +214,52 @@ fi
 '
 }
 test6
+
+test7() {
+echo
+echo "=== TEST 7: передан порог -c 0 ==="
+echo "Подготовка: 5 файлов по 160M (800M, 78%), порог 0, lzma off"
+echo "Ожидание:   exit 0, 1 архив, log пуст"
+echo
+
+
+unshare -r -m bash -c '
+trap "umount /tmp/lab-test/log; rm -rf /tmp/lab-test" EXIT
+
+mkdir -p /tmp/lab-test/log
+mkdir -p /tmp/lab-test/backup
+
+mount -t tmpfs -o size=1G disk /tmp/lab-test/log
+
+for i in {1..5}; do
+fallocate -l 160M "/tmp/lab-test/log/file$i"
+touch -d "$((6 - i)) days ago" "/tmp/lab-test/log/file$i"
+done
+
+bash "$HOME/ArchScript/arch.sh" -c 0 /tmp/lab-test/log /tmp/lab-test/backup
+
+code=$?
+
+echo "exit code: $code"
+echo "Содержимое в папке backup:"
+ls /tmp/lab-test/backup
+echo "Содержимое в папке log:"
+ls /tmp/lab-test/log
+
+echo
+backup_count=$(ls /tmp/lab-test/backup/*.tar.gz | wc -l)
+log_count=$(ls /tmp/lab-test/log | wc -l)
+
+if [ "$code" -eq 0 ] && [ "$backup_count" -eq 1 ] && [ "$log_count" -eq 0 ]; then
+    echo "PASSED"
+else
+    echo "FAILED"
+fi
+
+echo "================================="
+echo
+'
+}
+
+test7
+
