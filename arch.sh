@@ -90,5 +90,5 @@ fi
 echo "Archive created: $archName"
 
 #Удаление временного файла
-rm -f fileList
+rm -f "$fileList"
 exit 0
