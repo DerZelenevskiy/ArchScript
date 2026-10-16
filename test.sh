@@ -106,9 +106,9 @@ backup_count=$(ls /tmp/lab-test/backup/*.tar.xz 2>/dev/null | wc -l)
 
 
 if [ "$code" -eq 0 ] && [ "$log_count" -eq 4 ] && [ "$backup_count" -eq 1 ]; then
-echo "Результат: PASS"
+echo "Результат: PASSED"
 else
-echo "Результат: FAIL"
+echo "Результат: FAILED"
 fi
 '
 }
