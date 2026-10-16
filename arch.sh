@@ -75,7 +75,7 @@ while read -r time size path; do
 done < <(cd "$logDir" && find . -type f -printf "%T+ %k %P\n" | sort)
 
 #Проверка наличия файлов
-if (( fileCount == 0 )); then echo "No files to archive"; exit 0; fi
+#if (( fileCount == 0 )); then echo "No files to archive"; exit 0; fi
 echo "Files found: $fileCount with total size of $((totalSize / 1024))MB"
 
 #Создание архива
