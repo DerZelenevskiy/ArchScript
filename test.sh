@@ -113,3 +113,32 @@ fi
 '
 }
 test4
+
+
+test6() {
+echo "=== Тест 6: порог не передан ==="
+echo "Ожидание:   неверный ввод"
+echo
+
+unshare -r -m bash -c '
+trap "umount /tmp/lab-test/log 2>/dev/null; rm -rf /tmp/lab-test" EXIT
+
+mkdir -p /tmp/lab-test/log
+mkdir -p /tmp/lab-test/backup
+
+mount -t tmpfs -o size=1G disk /tmp/lab-test/log
+
+out=$(bash "$HOME/ArchScript/arch.sh" -c 2>&1)
+code=$?
+echo "$out"
+echo "exit code: $code"
+echo "=========================="
+
+if [ "$code" -eq 1 ] && echo "$out" | grep -q "requires an argument"; then
+    echo "PASSED"
+else
+    echo "FAILED"
+fi
+'
+}
+test6
