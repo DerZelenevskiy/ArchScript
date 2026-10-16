@@ -139,6 +139,54 @@ fi
 test4
 
 
+test5() {
+echo
+echo "=== TEST 5: lzma off, заполнение выше порога, порог не передаётся, директории передаются ==="
+echo "Подготовка: 5 файлов по 160MB (800 MB, 78%), порог 70 (дефолтный)%, lzma off"
+echo "Ожидание:   exit 0, один архив в backup, что-то удалено из log"
+echo
+
+
+unshare -r -m bash -c '
+trap "umount /tmp/lab-test/log; rm -rf /tmp/lab-test" EXIT
+
+mkdir -p /tmp/lab-test/log
+mkdir -p /tmp/lab-test/backup
+
+mount -t tmpfs -o size=1G disk /tmp/lab-test/log
+
+for i in {1..5}; do
+fallocate -l 160M "/tmp/lab-test/log/file$i"
+touch -d "$((6 - i)) days ago" "/tmp/lab-test/log/file$i"
+done
+
+bash "$HOME/ArchScript/arch.sh" /tmp/lab-test/log /tmp/lab-test/backup
+
+code=$?
+
+echo "exit code: $code"
+echo "Содержимое в папке backup:"
+ls /tmp/lab-test/backup
+echo "Содержимое в папке log:"
+ls /tmp/lab-test/log
+
+echo
+backup_count=$(ls /tmp/lab-test/backup/*.tar.gz | wc -l)
+log_count=$(ls /tmp/lab-test/log | wc -l)
+
+if [ "$code" -eq 0 ] && [ "$backup_count" -eq 1 ] && [ "$log_count" -eq 4 ]; then
+    echo "PASSED"
+else
+    echo "FAILED"
+fi
+
+echo "================================="
+echo
+'
+}
+
+test5
+
 test6() {
 echo "=== Тест 6: порог не передан ==="
 echo "Ожидание:   неверный ввод"
