@@ -6,7 +6,7 @@ Usage:
 Where:
  -c: maximal capacity (default: 70%)
   working-dir: path to the working directory (default: pwd)
-  backupDir: path to the destination directory (default ../backup)
+  backup-dir: path to the destination directory (default ../backup)
 Uses gzip compression by default
 To set compression mode to lzma2, set export variable LAB1_MAX_COMPRESSION=1"
 
@@ -32,11 +32,10 @@ shift $((OPTIND - 1))
 #Определение рабочей директории
 logDir="$1"
 if [ ! -d "$logDir" ]; then
-  if [ -z "$logDir" ]; then logDir="$(dirname -- "$0")"
+  if [ -z "$logDir" ]; then logDir="$(pwd)"
   else echo "Invalid working-dir $logDir" >&2; echo "Use -h for more info"; exit 1; fi
 fi
 logDir="$(realpath "$logDir")"
-cd "$logDir"
 
 #Определение директории для сохранения архива
 backupDir="$2"
