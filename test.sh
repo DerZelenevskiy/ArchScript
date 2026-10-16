@@ -70,6 +70,30 @@ echo "=========================="
 '
 }
 test2
+test3() {
+echo "=== Тест 3: порог не передаётся, директории не существует ==="
+echo "Ожидание:   неверный ввод"
+echo
+unshare -r -m bash -c '
+
+trap "umount /tmp/lab-test/log; rm -rf /tmp/lab-test" EXIT
+mkdir -p /tmp/lab-test/log
+mkdir -p /tmp/lab-test/backup
+
+mount -t tmpfs -o size=1G disk /tmp/lab-test/log
+
+bash "$HOME/ArchScript/arch.sh" /tmp/no-such-dir-xyz
+code=$?
+echo "exit code: $code"
+if [ "$code" -eq 1 ]; then
+echo "PASSED"
+else
+echo "FAILED"
+fi
+echo "=========================="
+'
+}
+test3
 test4() {
 echo "=== Тест 4: lzma on, заполнение выше порога, порог в формате долей, директории не передаются ==="
 echo "Подготовка: 6 файлов по 150M (900M, 87.8%), порог 65.5%, lzma on"
