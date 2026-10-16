@@ -46,3 +46,27 @@ echo
 }
 
 test1
+test2() {
+echo "=== Тест 2: порог передан неверно, директории не переданы ==="
+echo "Ожидание:   неверный ввод"
+echo
+unshare -r -m bash -c '
+
+trap "umount /tmp/lab-test/log; rm -rf /tmp/lab-test" EXIT
+mkdir -p /tmp/lab-test/log
+mkdir -p /tmp/lab-test/backup
+
+mount -t tmpfs -o size=1G disk /tmp/lab-test/log
+
+bash "$HOME/lab/arch.sh" -c 120
+code=$?
+echo "exit code: $code"
+if [ "$code" -eq 1 ]; then
+echo "PASSED"
+else
+echo "FAILED"
+fi
+echo "=========================="
+'
+}
+test2
