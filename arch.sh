@@ -68,14 +68,14 @@ fileList="$(mktemp)"
 totalSize=0
 fileCount=0
 while read -r time size path; do
-  if [[ ! "$(basename "$0")" = "$path" ]]; then echo "$path" >> "$fileList"; fi
+  if [[ ! "$(realpath "$0")" = "$(realpath "$path")" ]]; then echo "$path" >> "$fileList"; fi
   (( totalSize += size ))
   (( ++fileCount ))
   if (( totalSize >= toBeFreed )); then break; fi
 done < <(cd "$logDir" && find . -type f -printf "%T+ %k %P\n" | sort)
 
 #Проверка наличия файлов
-#if (( fileCount == 0 )); then echo "No files to archive"; exit 0; fi
+if (( fileCount == 0 )); then echo "No files to archive"; exit 0; fi
 echo "Files found: $fileCount with total size of $((totalSize / 1024))MB"
 
 #Создание архива
